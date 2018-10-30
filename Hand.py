@@ -102,8 +102,8 @@ class Hand(object):
                 other_hands.append(self)
             return other_hands
         # elif self.hand_type() == FOUR_OF_A_KIND:
-            # import pdb; pdb.set_trace()
-            # if self.largest_card_count[1] > other_hands[0].largest_card_count[1]:
-            #     return [self]
-            # return other_hands
+        #     import pdb; pdb.set_trace()
+        #     if self.largest_card_count[1] > other_hands[0].largest_card_count[1]:
+        #         return [self]
+        #     return other_hands
         return other_hands

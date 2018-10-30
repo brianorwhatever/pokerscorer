@@ -1,3 +1,4 @@
-* test game
-* test card
-* rank hand values
+* Finish hand.compare_hands_tiebreak
+* test hand.compare_hands_tiebreak
+* test hand.rank
+* 
