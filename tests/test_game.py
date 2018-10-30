@@ -2,6 +2,8 @@ import unittest
 
 from exceptions import ValidationError
 from Game import Game
+from Hand import Hand
+from Card import Card
 
 class TestGame(unittest.TestCase):
     def test_init_with_no_player_count(self):
@@ -57,6 +59,20 @@ class TestGame(unittest.TestCase):
         self.assertEqual(len(hand.cards), 5)
         for card in hand.cards:
             self.assertTrue(card not in game.deck)
-
-if __name__ == '__main__':
-    unittest.main()
+    
+    def test_compare_hands(self):
+        player_count = 4
+        game = Game(player_count=player_count)
+        winning_hand = Hand([Card('2', '♥'), Card('4', '♣'), Card('5', '♦'), Card('5', '♥'), Card('8', '♠')])
+        game.hands = [
+            winning_hand,
+            Hand([Card('6', '♣'), Card('9', '♥'), Card('J', '♦'), Card('J', '♣'), Card('K', '♦')]),
+            Hand([Card('3', '♠'), Card('5', '♠'), Card('6', '♠'), Card('7', '♥'), Card('9', '♦')]),
+            Hand([Card('3', '♣'), Card('9', '♠'), Card('10', '♣'), Card('Q', '♦'), Card('A', '♦')])
+        ]
+        
+        winning = game.compare_hands()
+        
+        self.assertEqual(winning[0], winning_hand)
+        self.assertEqual(winning[0].hand_type(), 'Pair')
+        

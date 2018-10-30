@@ -42,19 +42,19 @@ class TestHand(unittest.TestCase):
         
         card_counts = hand._count_cards()
 
-        self.assertEqual(card_counts['2'], 1)
-        self.assertEqual(card_counts['8'], 1)
-        self.assertEqual(card_counts['4'], 1)
-        self.assertEqual(card_counts['5'], 1)
-        self.assertEqual(card_counts['A'], 1)
+        self.assertEqual(card_counts[2], 1)
+        self.assertEqual(card_counts[8], 1)
+        self.assertEqual(card_counts[4], 1)
+        self.assertEqual(card_counts[5], 1)
+        self.assertEqual(card_counts[14], 1)
 
     def test_count_cards_multiple_of_a_kind(self):
         hand = Hand([Card('2', '♠'), Card('2', '♥'), Card('2', '♣'), Card('2', '♦'), Card('A', '♠')])
         
         card_counts = hand._count_cards()
 
-        self.assertEqual(card_counts['2'], 4)
-        self.assertEqual(card_counts['A'], 1)
+        self.assertEqual(card_counts[2], 4)
+        self.assertEqual(card_counts[14], 1)
         
     def test_hand_type_royal_flush(self):
         hand = Hand([Card('10', '♦'), Card('J', '♦'), Card('Q', '♦'), Card('K', '♦'), Card('A', '♦')])
@@ -105,3 +105,19 @@ class TestHand(unittest.TestCase):
         hand = Hand([Card('3', '♥'), Card('10', '♦'), Card('J', '♣'), Card('K', '♦'), Card('9', '♥')])
         hand_type = hand.hand_type()
         self.assertEqual(hand_type, HIGH_CARD)
+    
+    # def test_rank(self):
+    #     self.assertFalse(True)
+    
+    # def test_compare_hands_tiebreak_royal_flush(self):
+    #     self.assertFalse(True)
+        
+    # def test_compare_hands_tiebreak_straight_flush(self):
+    #     self.assertFalse(True)
+    
+    # def test_compare_hands_tiebreak_four_of_a_kind(self):
+    #     hand1 = Hand([Card('2', '♠'), Card('2', '♥'), Card('2', '♣'), Card('2', '♦'), Card('A', '♠')])
+    #     hand2 = Hand([Card('3', '♠'), Card('3', '♥'), Card('3', '♣'), Card('3', '♦'), Card('K', '♠')])
+
+    #     compared = hand2.compare_hands_tiebreak([hand1])
+    #     self.assertEqual(compared, [hand2])

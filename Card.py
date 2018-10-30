@@ -18,7 +18,7 @@ class Card(object):
         return False
     
     def __repr__(self):
-        return 'Card: ' + self.value + self.suit
+        return "Card('{value}', '{suit}')".format(value=self.value, suit=self.suit)
     
     def as_rank(self, ace_is_low=False):
         if self.value.isnumeric():

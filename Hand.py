@@ -1,6 +1,6 @@
 import operator
 
-from constants import CARD_RANKS, ROYAL_FLUSH, STRAIGHT_FLUSH, FOUR_OF_A_KIND, FULL_HOUSE, \
+from constants import HAND_RANKS, CARD_RANKS, ROYAL_FLUSH, STRAIGHT_FLUSH, FOUR_OF_A_KIND, FULL_HOUSE, \
                       FLUSH, STRAIGHT, THREE_OF_A_KIND, TWO_PAIR, PAIR, HIGH_CARD
 from Card import Card
 from exceptions import ValidationError
@@ -21,15 +21,15 @@ class Hand(object):
         self._count_cards()
 
     def __repr__(self):
-        return str(self.cards)
+        return "Hand({cards})".format(cards=str(self.cards))
     
     def _count_cards(self):
         card_counts = {}
         for card in self.cards:
             try:
-                card_counts[card.value] += 1
+                card_counts[card.as_rank()] += 1
             except KeyError:
-                card_counts[card.value] = 1
+                card_counts[card.as_rank()] = 1
         return card_counts
     
     def has_flush(self):
@@ -64,27 +64,46 @@ class Hand(object):
         is_flush = self.has_flush()
         is_straight = self.has_straight()
         card_counts = self._count_cards()
-        largest_card_count = max(card_counts.items(), key=operator.itemgetter(1))
-        del card_counts[largest_card_count[0]]
-        second_largest_card_count = max(card_counts.items(), key=operator.itemgetter(1))
+        self.largest_card_count = max(card_counts.items(), key=operator.itemgetter(1))
+        del card_counts[self.largest_card_count[0]]
+        self.second_largest_card_count = max(card_counts.items(), key=operator.itemgetter(1))
         
         if is_flush and is_straight:
             if self.cards[-1:][0].value == 'A':
                 return ROYAL_FLUSH
             else:
                 return STRAIGHT_FLUSH
-        elif largest_card_count[1] == 4:
+        elif self.largest_card_count[1] == 4:
             return FOUR_OF_A_KIND
-        elif largest_card_count[1] == 3 and second_largest_card_count[1] == 2:
+        elif self.largest_card_count[1] == 3 and self.second_largest_card_count[1] == 2:
             return FULL_HOUSE
         elif is_flush:
             return FLUSH
         elif is_straight:
             return STRAIGHT
-        elif largest_card_count[1] == 3:
+        elif self.largest_card_count[1] == 3:
             return THREE_OF_A_KIND
-        elif largest_card_count[1] == 2 and second_largest_card_count[1] == 2:
+        elif self.largest_card_count[1] == 2 and self.second_largest_card_count[1] == 2:
             return TWO_PAIR
-        elif largest_card_count[1] == 2:
+        elif self.largest_card_count[1] == 2:
             return PAIR
         return HIGH_CARD
+    
+    def rank(self):
+        return HAND_RANKS.index(self.hand_type())
+
+    def compare_hands_tiebreak(self, other_hands):
+        if self.hand_type() == ROYAL_FLUSH:
+            other_hands.append(self)
+        elif self.hand_type() == STRAIGHT_FLUSH:
+            if self.highest_card() > other_hands[0].highest_card():
+                return [self]
+            elif self.highest_card() == other_hands[0].highest_card():
+                other_hands.append(self)
+            return other_hands
+        # elif self.hand_type() == FOUR_OF_A_KIND:
+            # import pdb; pdb.set_trace()
+            # if self.largest_card_count[1] > other_hands[0].largest_card_count[1]:
+            #     return [self]
+            # return other_hands
+        return other_hands

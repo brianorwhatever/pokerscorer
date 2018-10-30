@@ -25,3 +25,22 @@ class Game(object):
 
     def draw_card(self):
         return self.deck.pop()
+
+    def compare_hands(self):
+        winning_hands = []
+        for idx, hand in enumerate(self.hands):
+            if len(winning_hands) < 1:
+                winning_hands.append(hand)
+            else:
+                if hand.rank() < winning_hands[0].rank():
+                    winning_hands = [hand]
+                elif hand.rank() == winning_hands[0].rank():
+                    winning_hands = hand.compare_hands_tiebreak(winning_hands)
+
+        return winning_hands
+    
+    # def _compare_hand_values(self, winning_hands):
+    #     hand_type = winning_hands[0]['hand_type']
+
+    #     for hand in winning_hands:
+            
